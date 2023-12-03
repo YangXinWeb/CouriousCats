@@ -1,0 +1,184 @@
+body {
+  background-color: rgb(238, 238, 238);
+}
+
+.add-question{
+}
+
+.mint-container{
+  width: 100%;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Add this line */
+  position: fixed;
+  left: 50%; /* Align to the middle horizontally */
+  transform: translate(-50%, -50%); /* Center it precisely */
+  text-align: center;
+  top: 7vh;
+  background-color: rgb(238, 238, 238, 0.98);
+  z-index:2;
+}
+
+.QA-img {
+  width:100px;
+}
+
+.mint-button{
+  height:20px;
+  width:60px;
+  border-radius: 10px;
+  border:none;
+  background-color: rgb(189, 189, 189);
+  color:aliceblue;
+  box-shadow: 0 0 1px 1px rgba(58, 58, 58, 0.5);
+  margin-top:70px;
+}
+
+.mint-button:hover{
+  background-color: rgb(224, 224, 224);
+  color:rgb(184, 184, 184);
+  box-shadow: 0 0 2px 2px rgba(58, 58, 58, 0.3);
+}
+
+.QAicon{
+  width:45px;
+}
+
+/* Styles for the vertical and horizontal lines */
+hr {
+  margin-top: 130px;
+  border-top: 1px solid #d9d9d9; 
+  width:90%;
+}
+
+.body-container{
+  margin-left: 5%;
+  display:flex;
+  justify-content:center;
+  width:90%;
+}
+
+.list{
+  width:50%;
+  min-width: 400px;
+  padding-left: 20px;  
+}
+
+.vertical-line {
+  border-left: 0px solid  #d9d9d9; 
+  height: auto; 
+  min-height: 600px;
+  margin-top: 10px;
+  margin-right: 20px;
+  margin-left:20px;
+  display: inline-block;
+  position: absolute;
+  margin-left:50%;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 5px;
+  display: inline-block;
+}
+
+.item {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.answers {
+  display: none;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.answers li {
+  padding-left: 15px;
+  margin-top: 5px;
+  color:rgb(85, 85, 85);
+  font-size: 13px;
+}
+
+/* Styles for the triangle button */
+.triangle-button {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 13px 6px 0;
+  border-color: transparent rgb(5, 141, 68) transparent transparent;
+  transition: transform 0.3s;
+  margin-left: 10px;
+  border-radius: 2px;
+}
+
+.triangle-button:hover{
+  border-color: transparent rgb(255, 191, 211); 
+}
+
+.open .triangle-button {
+  border-width: 6px 13px 6px 0;
+  border-color: transparent rgb(159, 5, 51);
+  transform: rotate(-90deg);
+}
+
+.answer-count-icon{
+  display: inline-block;
+  border-radius: 50%;
+  font-size: 12px;
+  color:rgb(112, 112, 112);
+  text-align: center;
+  background-color: rgb(169, 244, 252);
+  width:13px;
+  height:13px;
+  padding: 1px;
+  position: absolute;
+  margin-bottom:35px;
+  margin-left: -11px;
+  z-index: 1;
+}
+
+.answer-input {
+  margin-top: 10px;
+  width: auto; 
+  min-width: 300px;
+  height: 20px; 
+}
+
+.popup{
+  background:rgba(255, 255, 255, 0.95);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content{
+  margin-top: 25%;
+  margin-left: 10%;
+  width:80%;
+  height:15px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.minted-image{
+  width:150px;
+}
+
+.top-item-list {
+  list-style: none;
+  padding: 0;
+}
+
