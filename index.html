@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Good Good</title>
-    <link rel="stylesheet" href="testStyle.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="mint-container">
@@ -17,23 +18,23 @@
     <!-- Horizontal line to separate content -->
     <hr>
 
-        <div class="body-container">
-            <!-- Left List -->
-            <div class="list">
-                <p> ~ New ~ </p>
-                <ul class="item-list" id="list-left">
-                    <!-- New questions will be added here dynamically -->
-                </ul>
-            </div>
-    
-            <!-- Right List -->
-            <div class="list">
-                <p> ~ Top ~ </p>
-                <ul class="item-list" id="list-right">
-                    <!-- Top questions with more answers will be added here dynamically -->
-                </ul>
-            </div>
+    <div class="body-container">
+        <!-- Left List -->
+        <div class="list">
+            <p> ~ New ~ </p>
+            <ul class="item-list" id="list-left">
+                <!-- New questions will be added here dynamically -->
+            </ul>
         </div>
+
+        <!-- Right List -->
+        <div class="list">
+            <p> ~ Top ~ </p>
+            <ul class="item-list" id="list-right">
+                <!-- Top questions with more answers will be added here dynamically -->
+            </ul>
+        </div>
+    </div>
 
     <!-- popup -->
     <div id="popup" class="popup" style="display: none;">
@@ -42,7 +43,7 @@
             <input class="question-input" type="text" placeholder="Enter Your Question">
             <button class="submit-question" id="close-popup">Add Q</button>
         </div>
-    </div>   
-    <script src="main.js"></script>
+    </div>
 </body>
+<script src="main.js"></script>
 </html>

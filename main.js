@@ -63,7 +63,7 @@ function addQuestionToList() {
 
     // Reinitialize listeners for the newly added elements
     initializeListeners();
-    updateanswerCount();
+    updateAnswerCount();
   }
 }
 
@@ -155,7 +155,7 @@ function handleAnswerSubmission() {
       );
     }
 
-    updateanswerCount();
+    updateAnswerCount();
   }
 }
 
@@ -187,7 +187,7 @@ mintButton.addEventListener("click", function (e) {
 });
 
 // Function to update the answer count icon
-function updateanswerCount() {
+function updateAnswerCount() {
   const triangleButtons = document.querySelectorAll(".triangle-button");
   triangleButtons.forEach((button) => {
     const answers = button.parentElement.querySelector(".answers");
