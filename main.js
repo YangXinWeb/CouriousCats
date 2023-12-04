@@ -33,6 +33,7 @@ class Question {
     this.answers = [];
     this.image = "Pictures/00.png";
     this.date = new Date();
+    this.isOpen = false;
   }
 
   addAnswer = (answer) => {
@@ -65,20 +66,23 @@ class Question {
 
     const triangleButton = document.createElement("div");
     triangleButton.classList.add("triangle-button", "toggle-list");
+    
     triangleButton.addEventListener("click", (event) => {
       event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
 
-      const button = event.currentTarget;
-      const answers = button.parentElement.querySelector(".answers");
-      button.parentElement.classList.toggle("open");
-      answers.style.display =
-        answers.style.display === "none" ? "block" : "none";
+      self.isOpen = !self.isOpen
+      triangleButton.parentElement.classList.toggle("open")
+      updateList()
     });
     newItem.appendChild(triangleButton);
 
     const answersBlock = document.createElement("div");
     answersBlock.classList.add("answers");
-    answersBlock.style.display = "none";
+    if (this.isOpen) {
+      answersBlock.style.display = "block";
+    } else {
+      answersBlock.style.display = "none";
+    }
 
     const answersList = document.createElement("ul");
     this.answers.forEach((answer) => {
