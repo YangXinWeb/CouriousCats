@@ -1,8 +1,35 @@
 let questions = [];
+let openedList = null;
+
+class Answer {
+  constructor(text, id) {
+    this.text = text;
+    this.id = id;
+    this.date = new Date();
+  }
+
+  createNewListItem = () => {
+    const dateSpan = document.createElement("span");
+    dateSpan.classList.add("date");
+
+    const currentDate = new Date().toLocaleDateString(); // Get the current date
+
+    dateSpan.textContent = `·${currentDate}`;
+    dateSpan.style.fontSize = "9px"; // Change the font size
+    dateSpan.style.color = "#0000005C"; // Change the color
+
+    const newListItem = document.createElement("li");
+    newListItem.textContent = this.text;
+    newListItem.appendChild(dateSpan); // Append the dateSpan to the newListItem
+
+    return newListItem;
+  };
+}
 
 class Question {
-  constructor(title) {
+  constructor(title, id) {
     this.title = title;
+    this.id = id;
     this.answers = [];
     this.image = "Pictures/00.png";
     this.date = new Date();
@@ -17,6 +44,7 @@ class Question {
   };
 
   createNewListItem = () => {
+    var self = this; // important to keep a reference to this for closures
     const newItem = document.createElement("li");
     newItem.classList.add("item");
 
@@ -27,6 +55,7 @@ class Question {
 
     const answerCountIcon = document.createElement("span");
     answerCountIcon.classList.add("answer-count-icon");
+    answerCountIcon.textContent = `${this.answers.length}`
     newItem.appendChild(answerCountIcon);
 
     const questionSpan = document.createElement("span");
@@ -36,22 +65,48 @@ class Question {
 
     const triangleButton = document.createElement("div");
     triangleButton.classList.add("triangle-button", "toggle-list");
+    triangleButton.addEventListener("click", (event) => {
+      event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
+
+      const button = event.currentTarget;
+      const answers = button.parentElement.querySelector(".answers");
+      button.parentElement.classList.toggle("open");
+      answers.style.display =
+        answers.style.display === "none" ? "block" : "none";
+    });
     newItem.appendChild(triangleButton);
 
+    const answersBlock = document.createElement("div");
+    answersBlock.classList.add("answers");
+    answersBlock.style.display = "none";
+
     const answersList = document.createElement("ul");
-    answersList.classList.add("answers");
-    newItem.appendChild(answersList);
+    this.answers.forEach((answer) => {
+      answersList.prepend(answer.createNewListItem());
+    });
+    answersBlock.appendChild(answersList);
 
     const answerInput = document.createElement("input");
     answerInput.classList.add("answer-input");
     answerInput.type = "text";
     answerInput.placeholder = "Enter your Answer";
-    newItem.appendChild(answerInput);
+    answersBlock.appendChild(answerInput);
 
     const submitAnswerBtn = document.createElement("button");
     submitAnswerBtn.classList.add("submit-answer");
+    submitAnswerBtn.addEventListener("click", () => {
+      let answer = new Answer(
+        answerInput.value,
+        `answer-${this.id}-${this.answers.count}`
+      );
+      self.addAnswer(answer);
+      answerInput.value = "";
+      updateList()
+    });
     submitAnswerBtn.textContent = "Submit";
-    newItem.appendChild(submitAnswerBtn);
+    answersBlock.appendChild(submitAnswerBtn);
+
+    newItem.appendChild(answersBlock);
 
     return newItem;
   };
@@ -65,14 +120,22 @@ function addQuestionToList() {
     return;
   }
 
-  questions.push(new Question(title));
+  questions.push(new Question(title, `question-id-${questions.coun}`));
 
-  /* NEW */
+  updateList();
+
+  // Reset question popup
+  questionInput.value = "";
+  document.getElementById("popup").style.display = "none";
+}
+
+function updateList() {
+  /* TOP */
   let rightList = document.getElementById("list-right");
   rightList.innerHTML = ""; // reset list
   questions
     .sort((rhs, lhs) => {
-      if (rhs.date > lhs.date) {
+      if (rhs.answers.length > lhs.answers.length) {
         return 1;
       } else {
         return -1;
@@ -82,12 +145,12 @@ function addQuestionToList() {
       rightList.prepend(question.createNewListItem());
     });
 
-  /* TOP */
+  /* NEW */
   let leftList = document.getElementById("list-left");
   leftList.innerHTML = ""; // reset list
   questions
     .sort((rhs, lhs) => {
-      if (rhs.answers.count < lhs.answers.count) {
+      if (rhs.date > lhs.date) {
         return 1;
       } else {
         return -1;
@@ -96,106 +159,6 @@ function addQuestionToList() {
     .forEach((question) => {
       leftList.prepend(question.createNewListItem());
     });
-
-  // Reset question popup
-  questionInput.value = "";
-  document.getElementById("popup").style.display = "none";
-
-  // Reinitialize listeners for the newly added elements
-  initializeListeners();
-  updateAnswerCount();
-}
-
-function initializeListeners() {
-  const triangleButtons = document.querySelectorAll(".triangle-button");
-
-  triangleButtons.forEach((button) => {
-    const answers = button.parentElement.querySelector(".answers");
-    answers.style.display = "none"; // Hide the answers initially
-
-    button.removeEventListener("click", handleTriangleClick); // Remove the existing click event listener
-    button.addEventListener("click", handleTriangleClick);
-  });
-
-  // Add an event listener to handle answer submission
-  document.querySelectorAll(".submit-answer").forEach((submitAnswerBtn) => {
-    submitAnswerBtn.removeEventListener("click", handleAnswerSubmission); // Remove the existing click event listener
-    submitAnswerBtn.addEventListener("click", handleAnswerSubmission);
-  });
-}
-
-function handleTriangleClick(event) {
-  event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
-
-  const button = event.currentTarget;
-  const answers = button.parentElement.querySelector(".answers");
-  button.parentElement.classList.toggle("open");
-  answers.style.display = answers.style.display === "none" ? "block" : "none";
-}
-
-function handleAnswerSubmission() {
-  console.log("Submit button clicked");
-
-  const answers = this.parentElement;
-  const answerInput = answers.querySelector(".answer-input");
-  const newAnswer = answerInput.value.trim();
-
-  console.log("Answer:", newAnswer);
-
-  if (newAnswer !== "") {
-    const dateSpan = document.createElement("span");
-    dateSpan.classList.add("date");
-
-    const currentDate = new Date().toLocaleDateString(); // Get the current date
-
-    dateSpan.textContent = `·${currentDate}`;
-    dateSpan.style.fontSize = "9px"; // Change the font size
-    dateSpan.style.color = "#0000005C"; // Change the color
-
-    const newListItem = document.createElement("li");
-    newListItem.textContent = `A: ${newAnswer}`;
-    newListItem.appendChild(dateSpan); // Append the dateSpan to the newListItem
-
-    answers.insertBefore(newListItem, answerInput);
-    answerInput.value = "";
-
-    // Append the new answer to the corresponding item in the other list
-    const otherList =
-      answers.parentElement.parentElement.id === "list-left"
-        ? document.getElementById("list-right")
-        : document.getElementById("list-left");
-
-    const newItemRight = newListItem.cloneNode(true); // Clone only the answer item
-
-    if (answers.parentElement.id === "list-left") {
-      // Only append to the other list if the current list is the "New" list
-      if (!isAnswerAlreadyAdded(otherList, newAnswer)) {
-        otherList.querySelector(".answers").prepend(newItemRight);
-      }
-    } else {
-      // Find the corresponding item in the other list and append the new answer
-      const correspondingItem = otherList.querySelector(".add-question");
-      const correspondingAnswersList = otherList.querySelector(".answers");
-      const correspondingNewAnswer = newAnswer;
-
-      const dateSpanRight = document.createElement("span");
-      dateSpanRight.classList.add("date");
-      dateSpanRight.textContent = `·${currentDate}`;
-      dateSpanRight.style.fontSize = "9px";
-      dateSpanRight.style.color = "#0000005C";
-
-      const newListItemRight = document.createElement("li");
-      newListItemRight.textContent = `A: ${correspondingNewAnswer}`;
-      newListItemRight.appendChild(dateSpanRight);
-
-      correspondingAnswersList.insertBefore(
-        newListItemRight,
-        correspondingAnswersList.firstChild
-      );
-    }
-
-    updateAnswerCount();
-  }
 }
 
 function saveState() {
@@ -225,18 +188,6 @@ mintButton.addEventListener("click", function (e) {
   loadState();
 });
 
-// Function to update the answer count icon
-function updateAnswerCount() {
-  const triangleButtons = document.querySelectorAll(".triangle-button");
-  triangleButtons.forEach((button) => {
-    const answers = button.parentElement.querySelector(".answers");
-    const answerCountIcon =
-      button.parentElement.querySelector(".answer-count-icon");
-    const answerCount = answers.querySelectorAll("li").length;
-    answerCountIcon.textContent = answerCount;
-  });
-}
-
 // Show the popup
 var btn = document.getElementById("btn");
 btn.addEventListener("click", function (e) {
@@ -252,6 +203,3 @@ document.querySelectorAll(".submit-question").forEach((submitQuestionBtn) => {
   submitQuestionBtn.removeEventListener("click", addQuestionToList); // Remove the existing click event listener
   submitQuestionBtn.addEventListener("click", addQuestionToList);
 });
-
-// Call initializeListeners initially
-initializeListeners();
