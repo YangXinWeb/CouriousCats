@@ -71,7 +71,6 @@ class Question {
       event.stopPropagation(); // Prevent the event from bubbling to the parent (item)
 
       self.isOpen = !self.isOpen
-      triangleButton.parentElement.classList.toggle("open")
       updateList()
     });
     newItem.appendChild(triangleButton);
@@ -79,8 +78,10 @@ class Question {
     const answersBlock = document.createElement("div");
     answersBlock.classList.add("answers");
     if (this.isOpen) {
+      triangleButton.parentElement.classList.add('open')
       answersBlock.style.display = "block";
     } else {
+      triangleButton.parentElement.classList.remove('open')
       answersBlock.style.display = "none";
     }
 
