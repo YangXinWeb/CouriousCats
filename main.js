@@ -1,17 +1,28 @@
-// Function to add a new question to the list
-function addQuestionToList() {
-  const questionInput = document.querySelector(".question-input");
-  const questionText = questionInput.value.trim();
+let questions = [];
 
-  if (questionText !== "") {
-    const image = document.querySelector(".popup-content img").cloneNode(true);
+class Question {
+  constructor(title) {
+    this.title = title;
+    this.answers = [];
+    this.image = "Pictures/00.png";
+    this.date = new Date();
+  }
 
+  addAnswer = (answer) => {
+    this.answers.push(answer);
+  };
+
+  setImage = (image) => {
+    this.image = image;
+  };
+
+  createNewListItem = () => {
     const newItem = document.createElement("li");
     newItem.classList.add("item");
 
     const qaIcon = document.createElement("img");
     qaIcon.classList.add("QAicon");
-    qaIcon.src = image.src;
+    qaIcon.src = this.image;
     newItem.appendChild(qaIcon);
 
     const answerCountIcon = document.createElement("span");
@@ -20,7 +31,7 @@ function addQuestionToList() {
 
     const questionSpan = document.createElement("span");
     questionSpan.classList.add("add-question");
-    questionSpan.textContent = questionText;
+    questionSpan.textContent = this.title;
     newItem.appendChild(questionSpan);
 
     const triangleButton = document.createElement("div");
@@ -42,29 +53,57 @@ function addQuestionToList() {
     submitAnswerBtn.textContent = "Submit";
     newItem.appendChild(submitAnswerBtn);
 
-    // Append both input and button to the answers list
-    answersList.appendChild(answerInput);
-    answersList.appendChild(submitAnswerBtn);
+    return newItem;
+  };
+}
 
-    const list1 = document.querySelector("#list-left");
-    const list2 = document.querySelector("#list-right");
-
-    // Use prepend to add the new item at the top
-    list1.prepend(newItem);
-
-    // Clone the item for the right list
-    const newItemRight = newItem.cloneNode(true);
-
-    // Use prepend to add the cloned item at the top of the right list
-    list2.prepend(newItemRight);
-
-    questionInput.value = "";
-    document.getElementById("popup").style.display = "none";
-
-    // Reinitialize listeners for the newly added elements
-    initializeListeners();
-    updateAnswerCount();
+// Function to add a new question to the list
+function addQuestionToList() {
+  const questionInput = document.querySelector(".question-input");
+  const title = questionInput.value.trim();
+  if (title.length == 0) {
+    return;
   }
+
+  questions.push(new Question(title));
+
+  /* NEW */
+  let rightList = document.getElementById("list-right");
+  rightList.innerHTML = ""; // reset list
+  questions
+    .sort((rhs, lhs) => {
+      if (rhs.date > lhs.date) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    .forEach((question) => {
+      rightList.prepend(question.createNewListItem());
+    });
+
+  /* TOP */
+  let leftList = document.getElementById("list-left");
+  leftList.innerHTML = ""; // reset list
+  questions
+    .sort((rhs, lhs) => {
+      if (rhs.answers.count < lhs.answers.count) {
+        return 1;
+      } else {
+        return -1;
+      }
+    })
+    .forEach((question) => {
+      leftList.prepend(question.createNewListItem());
+    });
+
+  // Reset question popup
+  questionInput.value = "";
+  document.getElementById("popup").style.display = "none";
+
+  // Reinitialize listeners for the newly added elements
+  initializeListeners();
+  updateAnswerCount();
 }
 
 function initializeListeners() {
