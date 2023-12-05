@@ -1,5 +1,3 @@
-
-
 main();
 
 async function main() {
@@ -25,6 +23,14 @@ async function main() {
     if (title.length == 0) {
       return;
     }
+
+    if(title.length > 64) {
+      console.log("question too long");
+      return;
+    }
+
+    // mint the question
+    contractWithSigner.mintQuestion(title)
 
     questions.push(new Question(title, `question-id-${questions.coun}`));
 
