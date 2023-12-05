@@ -13,7 +13,7 @@ body {
   transform: translate(-50%, -50%); /* Center it precisely */
   text-align: center;
   top: 7vh;
-  background-color: rgb(238, 238, 238, 0.98);
+  background-color: rgb(238, 238, 238, 0.9);
   z-index:2;
 }
 
